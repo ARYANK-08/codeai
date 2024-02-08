@@ -22,21 +22,21 @@ def fetch_repositories(username):
         print(f"Error {response.status_code} occurred while fetching repositories.")
         return []
 
-# def select_repository(repositories):
-#     """
-#     Allows the user to select a repository from the list of repositories.
+def select_repository(repositories):
+    """
+    Allows the user to select a repository from the list of repositories.
     
-#     Args:
-#     - repositories (list): A list of dictionaries containing repository details.
+    Args:
+    - repositories (list): A list of dictionaries containing repository details.
     
-#     Returns:
-#     - selected_repo (dict): The selected repository.
-#     """
-#     print("Select a repository:")
-#     for idx, repo in enumerate(repositories, 1):
-#         print(f"{idx}: {repo['name']}")
-#     repo_idx = int(input("Enter the repository number: ")) - 1
-#     return repositories[repo_idx]
+    Returns:
+    - selected_repo (dict): The selected repository.
+    """
+    print("Select a repository:")
+    for idx, repo in enumerate(repositories, 1):
+        print(f"{idx}: {repo['name']}")
+    repo_idx = int(input("Enter the repository number: ")) - 1
+    return repositories[repo_idx]
 
 def fetch_contents(url):
     """
@@ -100,9 +100,8 @@ def generate_pdf(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         repositories = fetch_repositories(username)
-
         if repositories:
-            selected_repo = int(request.POST.get('selected_repo'))
+            selected_repo = select_repository(repositories)
             repo_name = selected_repo['name']
             repo_url = selected_repo['url']
 
@@ -118,13 +117,23 @@ def generate_pdf(request):
     else:
         return render(request, 'generate_pdf.html')
 
+from fpdf import FPDF
+
+
 def convert_txt_to_pdf(content, pdf_filename):
-    pdf = FPDF()
+    # Create PDF object with specified parameters
+    pdf = FPDF(orientation='P', unit='mm', format='A4')
     pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.set_font("Arial", size=12)
 
+    # Write content to PDF
     for line in content.split('\n'):
-        pdf.cell(200, 10, txt=line, ln=True)
+        # Encode the line as UTF-8 to support a wider range of characters
+        line_utf8 = line.encode('latin-1', 'replace').decode('latin-1')
+        pdf.cell(200, 10, txt=line_utf8, ln=True)
 
+    # Output PDF to file
     pdf.output(pdf_filename)
+
 

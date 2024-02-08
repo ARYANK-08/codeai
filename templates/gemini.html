@@ -1,0 +1,33 @@
+<!-- generate_pdf.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate PDF</title>
+</head>
+<body>
+    <h1>PDF Chat</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="pdf_files" multiple required>
+        <textarea name="user_question" rows="4" cols="50" placeholder="Ask a question"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if response_text %}
+        <h2>Response:</h2>
+        <p>{{ response_text }}</p>
+    {% endif %}
+
+    {% if related_content %}
+        <h2>Related Content:</h2>
+        <ul>
+            {% for content in related_content %}
+                <li>{{ content }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
