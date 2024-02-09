@@ -22,21 +22,21 @@ def fetch_repositories(username):
         print(f"Error {response.status_code} occurred while fetching repositories.")
         return []
 
-def select_repository(repositories):
-    """
-    Allows the user to select a repository from the list of repositories.
-    
-    Args:
-    - repositories (list): A list of dictionaries containing repository details.
-    
-    Returns:
-    - selected_repo (dict): The selected repository.
-    """
-    print("Select a repository:")
-    for idx, repo in enumerate(repositories, 1):
-        print(f"{idx}: {repo['name']}")
-    repo_idx = int(input("Enter the repository number: ")) - 1
-    return repositories[repo_idx]
+# def select_repository(repositories):
+#     """
+#     Allows the user to select a repository from the list of repositories.
+
+#     Args:
+#     - repositories (list): A list of dictionaries containing repository details.
+
+#     Returns:
+#     - selected_repo (dict): The selected repository.
+#     """
+#     print("Select a repository:")
+#     for idx, repo in enumerate(repositories, 1):
+#         print(f"{idx}: {repo['name']}")
+#     repo_idx = int(input("Enter the repository number: ")) - 1
+#     return repositories[repo_idx]
 
 def fetch_contents(url):
     """
@@ -100,40 +100,147 @@ def generate_pdf(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         repositories = fetch_repositories(username)
-        if repositories:
-            selected_repo = select_repository(repositories)
-            repo_name = selected_repo['name']
-            repo_url = selected_repo['url']
 
-            contents = fetch_contents(f"{repo_url}/contents")
+        if repositories:
+            selected_repo = (request.POST.get('selected_repo'))
+            print((selected_repo))
+            repo_name = selected_repo.rsplit('/', 1)[1]
+
+            # repo_url = selected_repo['url']
+
+            contents = fetch_contents(f"{selected_repo}/contents")
             code = visualize_structure(contents, username, repo_name)
-            
+
             pdf_filename = f"{username}_{repo_name}_code_documentation.pdf"
             convert_txt_to_pdf(code, pdf_filename)
-            
+
             return HttpResponse(f"PDF '{pdf_filename}' generated successfully.")
         else:
             return HttpResponse("No repositories found for the given username.")
     else:
         return render(request, 'generate_pdf.html')
 
-from fpdf import FPDF
-
-
 def convert_txt_to_pdf(content, pdf_filename):
-    # Create PDF object with specified parameters
-    pdf = FPDF(orientation='P', unit='mm', format='A4')
+    pdf = FPDF()
     pdf.add_page()
-    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.set_font("Arial", size=12)
 
-    # Write content to PDF
     for line in content.split('\n'):
-        # Encode the line as UTF-8 to support a wider range of characters
-        line_utf8 = line.encode('latin-1', 'replace').decode('latin-1')
-        pdf.cell(200, 10, txt=line_utf8, ln=True)
+        pdf.cell(200, 10, txt=line, ln=True)
 
-    # Output PDF to file
     pdf.output(pdf_filename)
+
+import requests
+from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
+
+import requests
+from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
+
+def get_github_user_data(username):
+    url = f"https://api.github.com/users/{username}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to retrieve user data from GitHub API. Status code: {response.status_code}")
+        return None
+
+def get_github_repos(username):
+    url = f"https://api.github.com/users/{username}/repos"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to retrieve repository data from GitHub API. Status code: {response.status_code}")
+        return None
+
+def get_repo_details(repo):
+    languages_url = repo.get("languages_url")
+    commits_url = f"{repo.get('url')}/commits"
+    languages_response = requests.get(languages_url)
+    commits_response = requests.get(commits_url)
+    if languages_response.status_code == 200 and commits_response.status_code == 200:
+        languages_data = languages_response.json()
+        commits_data = commits_response.json()
+        return {
+            'languages': languages_data,
+            'commits_count': min(len(commits_data), 10),
+            'repo_name': repo.get("name")  # Include repo_name here
+        }
+    else:
+        return None
+
+def profile_metrics_calculation(username):
+    user_data = get_github_user_data(username)
+    repos_data = get_github_repos(username)
+    
+    if user_data is None or repos_data is None:
+        return None
+    
+    language_counts = defaultdict(int)
+    commits_info = []
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(get_repo_details, repo) for repo in repos_data]
+        for future in futures:
+            result = future.result()
+            if result:
+                languages_data = result['languages']
+                for language in languages_data:
+                    language_counts[language] += 1
+                commits_info.append({
+                    'repo_name': result['repo_name'],  # Access repo_name from result
+                    'commits_count': result['commits_count']
+                })
+
+    top_languages = sorted(language_counts.items(), key=lambda x: x[1], reverse=True)
+
+    return {
+        'username': username,
+        'avatar_url': user_data.get("avatar_url"),
+        'name': user_data.get("name"),
+        'total_repos': user_data.get("public_repos"),
+        'followers': user_data.get("followers"),
+        'following': user_data.get("following"),
+        'top_languages': top_languages,
+        'commits_info': commits_info
+    }
+
+
+def profile_analysis(request):
+    data = None
+    if request.method == "POST":
+        username = request.POST.get('username')
+        data = profile_metrics_calculation(username)
+        if data is None:
+            error = 'Failed to retrieve user data.'
+            return render(request, 'profile.html', {'error': error})
+    return render(request, 'profile.html', {'data': data})
+
+
+
+
+# def profile_analyzer(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         github_avatar = "https://avatars.githubusercontent.com/u/120780784?v=4"
+#         user_profile_link = f"https://github.com/{username}"
+#         user_bio = ""
+#         user_location = ""
+#         user_top_languages = ""
+#         total_repos = ""
+#         total_commits_repowise = ""
+#         total_followers = ""
+#         total_subscribers = ""
+#         #graph 
+#         commits_overtime = ""
+
+#         content = {
+#             '' : ,
+
+#         }
+#         return render(request, 'profile_analyzer.html',content)
 
 
