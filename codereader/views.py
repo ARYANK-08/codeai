@@ -3,6 +3,9 @@ from django.http import HttpResponse
 import os
 import requests
 from fpdf import FPDF
+import requests
+from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict
 
 def fetch_repositories(username):
     """
@@ -72,7 +75,7 @@ def visualize_structure(contents, username, repo_name):
             result += visualize_structure(subdir_contents, username, repo_name)
         else:
             filename = item['name']
-            if filename.endswith(('.py', '.dart')):
+            if filename.endswith(('.py', '.dart', '.html')):
                 raw_url = item['download_url']
                 code = fetch_code(raw_url)
                 result += f"File: {filename}\n"
@@ -102,23 +105,24 @@ def generate_pdf(request):
         repositories = fetch_repositories(username)
 
         if repositories:
-            selected_repo = (request.POST.get('selected_repo'))
-            print((selected_repo))
-            repo_name = selected_repo.rsplit('/', 1)[1]
+            selected_repo = request.POST.get('selected_repo')
+            repo_name = selected_repo.split('/')[-1]  # Extract the repository name from the URL
 
-            # repo_url = selected_repo['url']
-
-            contents = fetch_contents(f"{selected_repo}/contents")
+            contents = fetch_contents(selected_repo)
             code = visualize_structure(contents, username, repo_name)
 
+            # Construct the PDF filename
             pdf_filename = f"{username}_{repo_name}_code_documentation.pdf"
+
+            # Call the function to convert content to PDF
             convert_txt_to_pdf(code, pdf_filename)
 
             return HttpResponse(f"PDF '{pdf_filename}' generated successfully.")
         else:
             return HttpResponse("No repositories found for the given username.")
     else:
-        return render(request, 'generate_pdf.html')
+        return render(request, 'profile-page.html')
+
 
 def convert_txt_to_pdf(content, pdf_filename):
     pdf = FPDF()
@@ -130,13 +134,7 @@ def convert_txt_to_pdf(content, pdf_filename):
 
     pdf.output(pdf_filename)
 
-import requests
-from concurrent.futures import ThreadPoolExecutor
-from collections import defaultdict
 
-import requests
-from concurrent.futures import ThreadPoolExecutor
-from collections import defaultdict
 
 def get_github_user_data(username):
     url = f"https://api.github.com/users/{username}"
@@ -244,3 +242,8 @@ def profile_analysis(request):
 #         return render(request, 'profile_analyzer.html',content)
 
 
+def index(request):
+    return render(request, 'index.html')
+
+def user_signin(request):
+    return render(request, 'register-page.html')
