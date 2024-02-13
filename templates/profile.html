@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github Profile Details</title>
+</head>
+<body>
+    <style>
+    body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 20px;
+    }
+    .repo-list {
+        list-style: none;
+        padding: 0;
+    }
+    .repo-list li {
+        margin-bottom: 10px;
+    }
+    .top-commits {
+        margin-top: 20px;
+    }
+    .top-commits h3 {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <img class="avatar" src="{{ data.avatar_url }}" alt="Avatar">
+    <h1>{{ data.name }}</h1>
+    <p>Username: {{ data.username }}</p>
+    <p>Total Repos: {{ data.total_repos }}</p>
+    <p>Followers: {{ data.followers }}</p>
+    <p>Following: {{ data.following }}</p>
+
+    <h2>Repositories:</h2>
+    <ul class="repo-list">
+        {% for repo in data.repos_data %}
+            <li>{{ repo }}</li>
+        {% endfor %}
+    </ul>
+<!-- Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h2>Count of Repositories with Top Languages:</h2>
+<canvas id="barChart" width="400" height="200"></canvas>
+
+<h2>Count of Commits (Top 10) per Repository:</h2>
+<canvas id="pieChart" width="400" height="200"></canvas>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Retrieve data from Django template context
+        const topLanguages = JSON.parse('{{ data.top_languages|escapejs }}');
+        const commitsInfo = JSON.parse('{{ data.commits_info|escapejs }}');
+    
+        // Prepare data for bar chart
+        const barLabels = topLanguages.map(lang => lang[0]);
+        const barData = topLanguages.map(lang => lang[1]);
+    
+        // Create bar chart
+        const barChartCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barChartCtx, {
+            type: 'bar',
+            data: {
+                labels: barLabels,
+                datasets: [{
+                    label: 'Count',
+                    data: barData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Customize color if needed
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    
+        // Prepare data for pie chart
+        const pieLabels = commitsInfo.map(info => info.repo_name);
+        const pieData = commitsInfo.map(info => info.commits_count);
+    
+        // Create pie chart
+        const pieChartCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieChartCtx, {
+            type: 'pie',
+            data: {
+                labels: pieLabels,
+                datasets: [{
+                    data: pieData,
+                    backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)'], // Customize colors if needed
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    });
+    </script>
+    
+    
+    <form method="post" action="{% url 'profile_analysis' %}">
+        {% csrf_token %}
+        <label for="username">Enter GitHub Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Submit</button>
+    </form>
+   
