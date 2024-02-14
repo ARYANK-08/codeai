@@ -134,8 +134,6 @@ def generate_pdf(request):
 
 #     pdf.output(pdf_filename)
     
-from fpdf import FPDF
-
 def convert_txt_to_pdf(content, pdf_filename):
     # Create an instance of FPDF
     pdf = FPDF()
@@ -173,7 +171,6 @@ def convert_txt_to_pdf(content, pdf_filename):
 
     # Output the PDF to the specified filename
     pdf.output(pdf_filename)
-
 
 
 
@@ -248,9 +245,6 @@ def profile_metrics_calculation(username):
     }
 
 
-def profile_test(request):
-    return render(request, 'profile-page.html')
-
 def profile_analysis(request):
     data = None
     if request.method == "POST":
@@ -258,8 +252,8 @@ def profile_analysis(request):
         data = profile_metrics_calculation(username)
         if data is None:
             error = 'Failed to retrieve user data.'
-            return render(request, 'profile-page.html', {'error': error})
-    return render(request, 'profile-page.html', {'data': data})
+            return render(request, 'profile.html', {'error': error})
+    return render(request, 'profile.html', {'data': data})
 
 
 
