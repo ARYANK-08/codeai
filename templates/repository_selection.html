@@ -97,7 +97,7 @@
                <div class="card card-register">
                  <div class="card-header">
                    <img class="card-img" src="{% static 'assets/img/square1.png' %}" alt="Card image">
-                   <h4 class="card-title">Register</h4>
+                   <h4 class="card-title">code ai</h4>
                  </div>
 
                  <div class="card-body">
@@ -110,9 +110,37 @@
                       <select name="selected_repo" id="repository" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
                         <option value="" disabled selected>Select a repository</option>
                       </select>
-                      <button class="btn btn-success" type="submit" id="generatePdfBtn" disabled>Generate PDF</button>
-                    </form>
-                    
+                      <button class="btn btn-successs"  data-toggle="modal" data-target="#exampleModal" type="submit" id="generatePdfBtn" disabled>Generate PDF</button>
+
+              <!-- Button to trigger PDF generation -->
+
+<!-- Modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Loading PDF</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img src="https://c.tenor.com/FawYo00tBekAAAAC/tenor.gif" alt="Loading GIF">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+</script>
+                        
                  </div>
               
                </div>
@@ -201,7 +229,19 @@
      </footer>
    </div>
    <script>
+    $(document).ready(function() {
+      // When the submit button is clicked
+      $('#submitBtn').click(function() {
+        // Show the modal
+        $('#exampleModal').modal('show');
+      });
+    });
+    </script>
+   <script>
+    
     function fetchRepositories() {
+
+
         const username = document.getElementById('username').value;
         const repoSelect = document.getElementById('repository');
         const generatePdfBtn = document.getElementById('generatePdfBtn');

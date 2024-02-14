@@ -108,15 +108,53 @@
                   <h4 class="card-title">Code-AI</h4>
                   <a href ='/gemini' button class="btn btn-primary"  > Talk To Code</button> </a>
 
-
+                  <style>
+                    #codeContainer pre {
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                  }
+                
+                  .python-code {
+                    color: #61dafb;
+                    font-family: 'Courier New', monospace; /* Optional: Set a monospaced font for better code display */
+                    white-space: pre-wrap; /* Preserve white spaces and allow text to wrap */
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    background-color: #282c34; /* Optional: Set a background color for better visibility */
+                  }
+                    
+                  body {
+                font-family: Arial, sans-serif;
+            }
+            .code-snippet {
+                background-color: #000;
+                color: #fff;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
+            pre {
+                color: #fff;
+                margin: 0;
+            }
+            .form-container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            .container{
+            max-width: 1000px;
+                margin: 0 auto;
+          }
+                </style>
                 </div>
             
                 <div class="card-body">
                     <h1>Code Documentation</h1>
                     <div id="codeContainer">
+                    
+
                         {% if code %}
                             {% for code_snippet in code %}
-                                <pre>{{ code_snippet|safe }}</pre>
+                            <pre id='resp' class="response-code pl-3">{{ code_snippet|safe }}</pre>
                             {% endfor %}
                         {% else %}
                             <!-- Handle empty code -->
@@ -125,22 +163,28 @@
                 </div>
                 
                 <script>
-                    function formatCode() {
-                        const codeContainer = document.getElementById('codeContainer');
-                        const codeSnippets = codeContainer.querySelectorAll('pre');
-                        
-                        codeSnippets.forEach(codeSnippet => {
-                            const codeText = codeSnippet.textContent.trim();
-                            if (codeText.startsWith('```python') && codeText.endsWith('```')) {
-                                codeSnippet.style.backgroundColor = 'black';
-                                codeSnippet.style.color = 'green';
-                            }
-                        });
-                    }
-                
-                    // Call formatCode function when the page loads
-                    window.onload = formatCode;
-                </script>
+                    function formatText() {
+                      
+
+    const codeContainer = document.getElementById('codeContainer');
+    const textContent = codeContainer.innerHTML;
+  
+    // Use regular expression to find lines starting with ```python and ending with ```
+    const regex = /```python([\s\S]*?)```/g;
+    const formattedText = textContent.replace(regex, (match) => {
+      const pythonCode = match.substring(11, match.length - 3).trim(); // Extract Python code between triple backticks
+      return `<div class="python-code">${pythonCode}</div>`;
+    });
+  
+    // Apply the formatted text back to the container
+    codeContainer.innerHTML = `<div class="code-container">${formattedText}</div>`;
+  }
+  
+  // Call formatText function when the page loads:
+  window.onload = formatText;
+  
+</script>
+             
             </div>
         </div>
       </div>
