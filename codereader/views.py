@@ -75,7 +75,7 @@ def visualize_structure(contents, username, repo_name):
             result += visualize_structure(subdir_contents, username, repo_name)
         else:
             filename = item['name']
-            if filename.endswith(('.py', '.dart', '.html')):
+            if filename.endswith(('.py', '.dart', '.html','.yaml')):
                 raw_url = item['download_url']
                 code = fetch_code(raw_url)
                 result += f"File: {filename}\n"
@@ -134,6 +134,8 @@ def generate_pdf(request):
 
 #     pdf.output(pdf_filename)
     
+from fpdf import FPDF
+
 def convert_txt_to_pdf(content, pdf_filename):
     # Create an instance of FPDF
     pdf = FPDF()
@@ -171,6 +173,7 @@ def convert_txt_to_pdf(content, pdf_filename):
 
     # Output the PDF to the specified filename
     pdf.output(pdf_filename)
+
 
 
 
@@ -245,6 +248,9 @@ def profile_metrics_calculation(username):
     }
 
 
+def profile_test(request):
+    return render(request, 'profile-page.html')
+
 def profile_analysis(request):
     data = None
     if request.method == "POST":
@@ -252,8 +258,8 @@ def profile_analysis(request):
         data = profile_metrics_calculation(username)
         if data is None:
             error = 'Failed to retrieve user data.'
-            return render(request, 'profile.html', {'error': error})
-    return render(request, 'profile.html', {'data': data})
+            return render(request, 'profile-page.html', {'error': error})
+    return render(request, 'profile-page.html', {'data': data})
 
 
 
@@ -488,7 +494,7 @@ def generate_pdf1(request):
         else:
             return HttpResponse("No repositories found for the given username.")
     else:
-        return render(request, 'generate_pdf.html')
+        return render(request, 'repository_selection.html')
 
 
 
@@ -504,7 +510,7 @@ def documentation(contents, username, repo_name):
 
             else:
                 filename = item['name']
-                if filename.endswith(('.py', '.dart')):
+                if filename.endswith(('.py', '.dart','.html','.yaml')):
                     raw_url = item['download_url']
                     code = fetch_code(raw_url)
                     futures.append(executor.submit(gemini, filename, code))
@@ -518,3 +524,8 @@ def documentation(contents, username, repo_name):
                 # Handle exceptions gracefully
                 result += f"Error processing: {e}\n" 
     return result
+
+
+def result(request):
+    return render(request, 'test.html')
+    
