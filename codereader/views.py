@@ -7,7 +7,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
 
-def fetch_repositories(username):
+def fetch_repositories(username,access_token):
     """
     Fetches repositories for the given GitHub username.
     
@@ -18,7 +18,12 @@ def fetch_repositories(username):
     - repositories (list): A list of dictionaries containing repository details.
     """
     url = f"https://api.github.com/users/{username}/repos"
-    response = requests.get(url)
+
+    headers = {
+        "Authorization": f"token {access_token}"
+    }
+
+    response = requests.get(url,headers=headers)
     if response.status_code == 200:
         return response.json()
     else:
@@ -41,7 +46,7 @@ def fetch_repositories(username):
 #     repo_idx = int(input("Enter the repository number: ")) - 1
 #     return repositories[repo_idx]
 
-def fetch_contents(url):
+def fetch_contents(url,access_token):
     """
     Fetches the contents (files and directories) from the provided URL.
     
@@ -51,14 +56,17 @@ def fetch_contents(url):
     Returns:
     - contents (list): A list of dictionaries containing file/folder details.
     """
-    response = requests.get(url)
+    headers = {
+        "Authorization": f"token {access_token}"
+    }
+    response = requests.get(url, headers=headers)
     if response.status_code == 200:
         return response.json()
     else:
         print(f"Error {response.status_code} occurred while fetching contents.")
         return []
 
-def visualize_structure(contents, username, repo_name):
+def visualize_structure(contents, username, repo_name,access_token):
     """
     Visualizes the folder structure recursively and documents code for files.
     
@@ -71,8 +79,8 @@ def visualize_structure(contents, username, repo_name):
     for item in contents:
         if item['type'] == 'dir':
             result += f"Folder: {item['name']}\n"
-            subdir_contents = fetch_contents(item['url'])
-            result += visualize_structure(subdir_contents, username, repo_name)
+            subdir_contents = fetch_contents(item['url'],access_token)
+            result += visualize_structure(subdir_contents, username, repo_name,access_token)
         else:
             filename = item['name']
             if filename.endswith(('.py', '.dart', '.html','.yaml')):
@@ -134,6 +142,48 @@ def generate_pdf(request):
 
 #     pdf.output(pdf_filename)
     
+def convert_txt_to_pdf1(content, pdf_filename):
+    # Create an instance of FPDF
+    pdf = FPDF()
+    
+    # Add a page to the PDF
+    pdf.add_page()
+    
+    # Set font for the PDF
+    pdf.set_font("Arial", size=12)
+
+    # Set the desired cell width and line height
+    cell_width = 190
+    line_height = 8
+
+    is_python_code_block = False  # Flag to track whether the current block is a Python code block
+
+    # Iterate through each line in the content
+    for line in content.split('\n'):
+        # Check if the line is the start of a Python code block
+        if line.strip().startswith('```python'):
+            pdf.set_fill_color(200, 220, 255)  # Set a background color for the code block
+            is_python_code_block = True
+            pdf.multi_cell(cell_width, line_height, txt='', fill=True)  # Add an empty line for separation
+        # Check if the line is the end of a Python code block
+        elif is_python_code_block and line.strip().endswith('```'):
+            line += '\n'  # Ensure the closing ``` is on its own line
+            pdf.multi_cell(cell_width, line_height, txt=line, fill=True)
+            is_python_code_block = False
+        # Check if the line is within a Python code block
+        elif is_python_code_block:
+            pdf.multi_cell(cell_width, line_height, txt=line, fill=True)
+        # Handle non-code lines
+        else:
+            pdf.multi_cell(cell_width, line_height, txt=line)
+
+    # Output the PDF to the specified filename
+    # pdf.output(pdf_filename)
+    
+     # Output the PDF as bytes using 'latin1' encoding
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    return pdf_bytes
+
 def convert_txt_to_pdf(content, pdf_filename):
     # Create an instance of FPDF
     pdf = FPDF()
@@ -171,6 +221,8 @@ def convert_txt_to_pdf(content, pdf_filename):
 
     # Output the PDF to the specified filename
     pdf.output(pdf_filename)
+    
+    
 
 
 
@@ -455,20 +507,22 @@ def gemini(filename, code):
     #     return render('gemini.html', {'response_text': response_text})
     # else:
     #     return render('gemini.html')
-    
+import base64
+
 
 def generate_pdf1(request):
+    access_token=(os.getenv("GITHUB_ACCESS_TOKEN"))
     if request.method == 'POST':
         username = request.POST.get('username')
-        repositories = fetch_repositories(username)
+        repositories = fetch_repositories(username,access_token)
         if repositories:
             selected_repo = (request.POST.get('selected_repo'))
             print((selected_repo))
             repo_name = selected_repo.rsplit('/', 1)[1]
 
-            contents = fetch_contents(f"{selected_repo}/contents")
-            code = documentation(contents, username, repo_name)
-            code1 = visualize_structure(contents, username, repo_name)
+            contents = fetch_contents(f"{selected_repo}/contents",access_token)
+            code = documentation(contents, username, repo_name,access_token)
+            code1 = visualize_structure(contents, username, repo_name, access_token)
 
             # Construct the PDF filename
             pdf_filename = f"{username}_{repo_name}_code.pdf"
@@ -478,10 +532,15 @@ def generate_pdf1(request):
 
 
             pdf_filename = f"{username}_{repo_name}_code_documentation.pdf"
-            convert_txt_to_pdf(code, pdf_filename)
+            pdf_byte = convert_txt_to_pdf1(code, pdf_filename)
+
+            # Convert binary PDF content to Base64 string
+            pdf_bytes = base64.b64encode(pdf_byte).decode('utf-8')
+
 
             content = {
-                'code' : code.splitlines(),
+                'code' : code,
+                'pdf_bytes': pdf_bytes
             }
             return render(request, 'test.html',content)
             # return HttpResponse(f"PDF '{pdf_filename}' generated successfully.")
@@ -492,15 +551,15 @@ def generate_pdf1(request):
 
 
 
-def documentation(contents, username, repo_name):
+def documentation(contents, username, repo_name,access_token):
     result = ""
     with ThreadPoolExecutor() as executor:
         futures = []
         for item in contents:
             if item['type'] == 'dir':
                 result += f"Folder: {item['name']}\n"
-                subdir_contents = fetch_contents(item['url'])
-                futures.append(executor.submit(documentation, subdir_contents, username, repo_name))
+                subdir_contents = fetch_contents(item['url'],access_token)
+                futures.append(executor.submit(documentation, subdir_contents, username, repo_name,access_token))
 
             else:
                 filename = item['name']

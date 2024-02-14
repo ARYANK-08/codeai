@@ -246,12 +246,18 @@
         const repoSelect = document.getElementById('repository');
         const generatePdfBtn = document.getElementById('generatePdfBtn');
 
+        const accessToken = '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';
+
         // Clear previous options
         repoSelect.innerHTML = '<option value="" disabled selected>Loading...</option>';
         generatePdfBtn.disabled = true;
 
-        // Fetch repositories
-        fetch(`https://api.github.com/users/${username}/repos`)
+        // Fetch repositories using the GitHub API and personal access token
+        fetch(`https://api.github.com/users/${username}/repos`, {
+            headers: {
+                Authorization: `token ${accessToken}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 // Populate repository select options

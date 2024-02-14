@@ -20,6 +20,20 @@
   <link href="{% static 'assets/css/blk-design-system.css' %}?v=1.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{% static '/assets/demo/demo.css' %}" rel="stylesheet" />
+
+  <style>
+    
+
+  .python-code {
+    color: #61dafb;
+    font-family: 'Courier New', monospace; /* Optional: Set a monospaced font for better code display */
+    white-space: pre-wrap; /* Preserve white spaces and allow text to wrap */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #282c34; /* Optional: Set a background color for better visibility */
+  }
+    
+</style>
 </head>
 
 <body class="register-page">
@@ -99,7 +113,42 @@
             <div class="col-lg-12 col-md-6 offset-lg-0 offset-md-3">
               <div id="square7" class="square square-7"></div>
               <div id="square8" class="square square-8"></div>
-              <button class="btn btn-primary" href ='/' > Download PDF</button> 
+              <button class="btn btn-primary" id="downloadBtn" > Download PDF</button> 
+              <script>
+                // Assuming pdf_bytes is already defined in your template
+                const pdf_bytes = "{{ pdf_bytes|safe }}";
+            
+                // Convert Base64 string to Uint8Array
+                const pdfBytes = new Uint8Array(atob(pdf_bytes).split("").map(char => char.charCodeAt(0)));
+            
+                // Function to trigger the download
+                function downloadPDF() {
+            
+                    // Create a Blob from the Uint8Array
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            
+                    // Create a link element
+                    const link = document.createElement('a');
+            
+                    // Set the href attribute to a Blob URL representing the data
+                    link.href = window.URL.createObjectURL(blob);
+            
+                    // Set the download attribute with the desired file name
+                    link.download = 'output.pdf';
+            
+                    // Append the link to the document
+                    document.body.appendChild(link);
+            
+                    // Trigger a click on the link element to start the download
+                    link.click();
+            
+                    // Remove the link from the document
+                    document.body.removeChild(link);
+                }
+            
+                // Attach the downloadPDF function to the button's click event
+                document.getElementById('downloadBtn').addEventListener('click', downloadPDF);
+            </script>
 
               <div class="card card-register">
                 
@@ -114,14 +163,6 @@
                     word-wrap: break-word;
                   }
                 
-                  .python-code {
-                    color: #61dafb;
-                    font-family: 'Courier New', monospace; /* Optional: Set a monospaced font for better code display */
-                    white-space: pre-wrap; /* Preserve white spaces and allow text to wrap */
-                    padding: 10px;
-                    border: 1px solid #ccc;
-                    background-color: #282c34; /* Optional: Set a background color for better visibility */
-                  }
                     
                   body {
                 font-family: Arial, sans-serif;
@@ -153,9 +194,11 @@
                     
 
                         {% if code %}
-                            {% for code_snippet in code %}
-                            <pre id='resp' class="response-code pl-3">{{ code_snippet|safe }}</pre>
-                            {% endfor %}
+                        <div id='resp' >
+                            <pre class="response-code pl-3">
+                              {{ code|safe }}
+                            </pre>
+                          </div>
                         {% else %}
                             <!-- Handle empty code -->
                         {% endif %}
@@ -163,27 +206,32 @@
                 </div>
                 
                 <script>
-                    function formatText() {
-                      
+                  function formatText() {
+                      const codeContainer = document.getElementById('resp');
+              
+                      // Check if the element exists before proceeding
+                      if (codeContainer) {
+                          const textContent = codeContainer.innerHTML;
+              
+                          // Use regular expression to find lines starting with ```python and ending with ```
+                          const regex = /```python([\s\S]*?)```/g;
+                          const formattedText = textContent.replace(regex, (match) => {
+                              const pythonCode = match.substring(11, match.length - 3).trim(); // Extract Python code between triple backticks
+                              return `<div class="python-code">${pythonCode}</div>`;
+                          });
+              
+                          // Apply the formatted text back to the container
+                          codeContainer.innerHTML = `<div class="code-container">${formattedText}</div>`;
+                      } else {
+                          console.error("Element with ID 'resp' not found.");
+                      }
+                  }
+              
+                  // Call formatText function when the page loads:
+                  window.onload = formatText;
 
-    const codeContainer = document.getElementById('codeContainer');
-    const textContent = codeContainer.innerHTML;
-  
-    // Use regular expression to find lines starting with ```python and ending with ```
-    const regex = /```python([\s\S]*?)```/g;
-    const formattedText = textContent.replace(regex, (match) => {
-      const pythonCode = match.substring(11, match.length - 3).trim(); // Extract Python code between triple backticks
-      return `<div class="python-code">${pythonCode}</div>`;
-    });
-  
-    // Apply the formatted text back to the container
-    codeContainer.innerHTML = `<div class="code-container">${formattedText}</div>`;
-  }
-  
-  // Call formatText function when the page loads:
-  window.onload = formatText;
-  
-</script>
+                
+              </script>
              
             </div>
         </div>
