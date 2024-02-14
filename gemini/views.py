@@ -18,7 +18,10 @@ from bs4 import BeautifulSoup
 import urllib.parse
 
 load_dotenv()
-genai.configure(api_key=(os.getenv("GOOGLE_API_KEY")))
+try:
+    genai.configure(api_key=(os.getenv("GOOGLE_API_KEY_A")))
+except:
+    genai.configure(api_key=(os.getenv("GOOGLE_API_KEY_S")))
 
 def get_pdf_text(pdf_docs):
     text = ""

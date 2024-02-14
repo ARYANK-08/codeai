@@ -358,7 +358,11 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 load_dotenv()
-genai.configure(api_key=(os.getenv("GOOGLE_API_KEY")))
+try:
+    genai.configure(api_key=(os.getenv("GOOGLE_API_KEY_A")))
+except:
+    genai.configure(api_key=(os.getenv("GOOGLE_API_KEY_S")))
+
 
 # def get_pdf_text(pdf_docs):
 #     text = ""
