@@ -21,6 +21,22 @@
   <link href="{% static 'assets/css/blk-design-system.css' %}?v=1.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{% static '/assets/demo/demo.css' %}" rel="stylesheet" />
+  <style>
+    #codeContainer pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .python-code {
+    color: #61dafb;
+    font-family: 'Courier New', monospace; /* Optional: Set a monospaced font for better code display */
+    white-space: pre-wrap; /* Preserve white spaces and allow text to wrap */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #282c34; /* Optional: Set a background color for better visibility */
+  }
+    
+</style>
 </head>
 
 <body class="profile-page">
@@ -135,64 +151,67 @@
 </head>
 
     
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      var responseText = "{{ response_text }}";
-      var lines = responseText.split('\n');
-      var responseBlock = document.getElementById('responseBlock');
 
-      lines.forEach(function(line) {
-          if (line.startsWith('**')) {
-              var h3 = document.createElement('h3');
-              h3.textContent = line.substring(2); // Exclude the starting "**"
-              responseBlock.appendChild(h3);
-          } else if ((line.startsWith("'''python") && line.endsWith("''")) || (line.startsWith("'") && line.endsWith("'"))) {
-              var code = document.createElement('span');
-              code.textContent = line.substring(2, line.length - 2); // Exclude the surrounding "''" or "'"
-              code.classList.add('code');
-              responseBlock.appendChild(code);
-              responseBlock.appendChild(document.createElement('br'));
-          } else {
-              var p = document.createElement('p');
-              p.textContent = line;
-              responseBlock.appendChild(p);
-          }
-      });
-  });
-</script>
-
-{% comment %} HEllo {% endcomment %}
 
     
     </div>
 </div>
-<div class="container-fluid">
-  <div class="row">
-      <div class="col-lg-10 mx-auto">
-          <div class="card mt-4">
-              <div class="card-body">
-                  <blockquote class="blockquote">
-                      {% if response_text %}
-                          <div class="response-container">
-                              
-                            {{ response_text | safe }}
-                          </div>
-                      {% endif %}
+<div class="container-fluid" id="codeContainer">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card mt-4">
+        <div class="card-body">
+          <blockquote class="blockquote">
+            {% if response_text %}
+            <div class="response-container text-left"> <!-- Added text-left class here -->
+              <h5 class="response-title">Response:</h5>
+              <pre id='resp' class="response-code pl-3">
+              
+                  {{ response_text | safe }}
+                
+              </pre>
 
-                      {% if related_content %}
-                          <h2>Related Content:</h2>
-                          <ul>
-                              {% for content in related_content %}
-                                  <li>{{ content }}</li>
-                              {% endfor %}
-                          </ul>
-                      {% endif %}
-                  </blockquote>
-              </div>
-          </div>
+            </div>
+            {% endif %}
+
+            {% if related_content %}
+              <h2 class="related-content-title">Related Content:</h2>
+              <ul class="related-content-list">
+                {% for content in related_content %}
+                  <li>{{ content }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </blockquote>
+        </div>
       </div>
+    </div>
   </div>
 </div>
+
+
+
+<script>
+  function formatText() {
+    const codeContainer = document.getElementById('resp');
+    const textContent = codeContainer.innerHTML;
+  
+    // Use regular expression to find lines starting with ```python and ending with ```
+    const regex = /```python([\s\S]*?)```/g;
+    const formattedText = textContent.replace(regex, (match) => {
+      const pythonCode = match.slice(11, -3).trim(); // Extract Python code between triple backticks
+      return `<div class="python-code">${pythonCode}</div>`;
+    });
+  
+    // Apply the formatted text back to the container
+    codeContainer.innerHTML = `<div class="code-container">${formattedText}</div>`;
+  }
+  
+  // Call formatText function when the page loads:
+  window.onload = formatText;
+  
+</script>
+
 
     <footer class="footer">
       <div class="container">
