@@ -3,7 +3,13 @@ Introducing TalkToCode: Your Solution to Understanding Complex Codebases
 
 Website : http://django-env.eba-kpfrhyez.ap-south-1.elasticbeanstalk.com/
 
+Implementation : http://django-env.eba-kpfrhyez.ap-south-1.elasticbeanstalk.com/static/assets/video.mp4
+
+![1709373866401](https://github.com/ARYANK-08/codeai/assets/120780784/b4862000-528f-44b2-86eb-dd1191c065bd)
+
 Have you ever found yourself grappling with thousands of lines of code, lacking proper documentation and clarity? As a developer entering a new organization, I encountered precisely this scenario. Understanding and modifying the codebase became a daunting task, hindering productivity and efficiency.
+
+
 
 Enter TalkToCode.
 
@@ -28,3 +34,8 @@ Why Choose TalkToCode?
 Ready to conquer complex codebases with ease? Visit TalkToCode and experience the future of code understanding.
 
 Understanding thousands of lines of code just got easier. 😎
+
+
+<iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7169633648147738625" height="665" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+
+
