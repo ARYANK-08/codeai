@@ -35,7 +35,4 @@ Ready to conquer complex codebases with ease? Visit TalkToCode and experience th
 
 Understanding thousands of lines of code just got easier. 😎
 
-
-[https://www.linkedin.com/embed/feed/update/urn:li:share:7169633648147738625
-](https://www.linkedin.com/posts/aryankyatham_understanding-thousands-of-lines-of-code-activity-7169633649091448832-yu_9?utm_source=share&utm_medium=member_desktop)https://www.linkedin.com/posts/aryankyatham_understanding-thousands-of-lines-of-code-activity-7169633649091448832-yu_9?utm_source=share&utm_medium=member_desktop
-
+https://www.linkedin.com/posts/aryankyatham_understanding-thousands-of-lines-of-code-activity-7169633649091448832-yu_9?utm_source=share&utm_medium=member_desktop
