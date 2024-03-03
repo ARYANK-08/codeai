@@ -36,6 +36,6 @@ Ready to conquer complex codebases with ease? Visit TalkToCode and experience th
 Understanding thousands of lines of code just got easier. 😎
 
 
-<iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7169633648147738625" height="665" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+https://www.linkedin.com/embed/feed/update/urn:li:share:7169633648147738625
 
 
