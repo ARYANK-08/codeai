@@ -1,5 +1,7 @@
 # talktocode
 a senior ai developer guru which helps you understand large codebases
+
+
 features: visualize codebase, solves personal doubts and build on existing codebase
 
 
