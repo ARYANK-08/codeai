@@ -1,0 +1,22 @@
+<!-- execute_code.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Run Python Code</title>
+</head>
+<body>
+    <h1>Python Code Executor</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Run Code</button>
+    </form>
+
+    {% if output %}
+        <h2>Output:</h2>
+        <pre>{{ output }}</pre>
+    {% endif %}
+</body>
+</html>

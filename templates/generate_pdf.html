@@ -59,7 +59,7 @@
 <body>
     <div class="container">
         <h2>Generate PDF</h2>
-        <form id="generatePdfForm" method="post" action="{% url 'generate_pdf' %}">
+        <form id="generatePdfForm" method="post" action="{% url 'generate_pdf1' %}">
             {% csrf_token %}
             <label for="username">Enter GitHub username:</label>
             <input type="text" id="username" name="username" oninput="fetchRepositories()">

@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Live Code Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <!-- Nucleo Icons -->
+ 
+  <link href="{% static '/assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link href="{% static 'assets/css/blk-design-system.css' %}?v=1.0.0" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{% static '/assets/demo/demo.css' %}" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gideon+Roman&family=Montserrat:wght@300;400&family=Open+Sans&family=Roboto+Condensed&family=Roboto:wght@300&display=swap" rel="stylesheet">
+
+</head>
+
+
+<body>
+    <style>
+        :root {
+            --dark-blue: #121212;
+            --blue: #1F1F1F;
+            --light-blue: #1F1F1F;
+            --pink: #1F1F1F;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+    font-family: 'Poppins', sans-serif;
+    background-image: linear-gradient(45deg, var(--light-blue), var(--blue));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10vh 0; /* Add some vertical padding */
+}
+
+        
+.code-editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Split into two equal columns */
+    gap: 20px; /* Add some space between columns */
+    width: 90%; /* Set width relative to viewport */
+    max-width: 1200px; /* Maximum width */
+    margin: auto;
+}
+
+.code, #result {
+    background-color: var(--dark-blue);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+        h1 {
+            font: 900 2rem sans-serif;
+            margin: 1rem 0;
+           
+        }
+        
+     
+        
+        .code textarea {
+
+            width: 80%;
+            height: 200px;
+            background-color: #1F1F1F;
+            color: white;
+            border: none;
+            padding: 6rem;
+            font-size: 1.1rem;
+            
+        }
+        
+    
+
+.btn {
+    font-size: 1rem; /* Adjust button font size */
+    padding: 10px 20px; /* More comfortable padding */
+}
+    
+        
+        h2,h1 {
+            color: black;
+        }
+        
+        pre{
+            color: black;
+            
+        }
+        .codeDescription{
+            color: white;
+        }
+     
+       
+    </style>
+
+    
+    <div class="code-editor">
+        <form method="post">
+            {% csrf_token %}
+        <div class="code">
+          
+
+            <div >
+                <h1 class="codeDescription"><img src="images/html.png" alt="">Code Description</h1>
+                {{ form.code_description }}
+            </div>
+            <div class="css-code">
+                <h1 class="codeDescription"><img src="images/CSS.png" alt="">Generated Code</h1>
+                {{ form.code_output }}
+            </div>
+            <div class="pt-4 gap">
+            <button class="btn btn-lg  btn-primary" type="submit" name="generate">Generate Code</button>
+            <button class="btn btn-lg  btn-primary" type="submit" name="run">Run This Code</button>
+        </div>       
+        </div>
+ </form>
+        <!-- <iframe id="result"></iframe> -->
+        <div id="result" >
+            {% if generated_code %}
+            <h1 style="color:white;">Output:</h1>
+            <p>{{ generated_code|safe }}</p>
+            {% else %}
+            <h1 style="color:white">Output:</h1>
+            <pre>No output to display yet.</pre>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
