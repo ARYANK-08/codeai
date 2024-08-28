@@ -12,17 +12,15 @@ TalkToCode acts as a senior AI developer assistant, helping you navigate complex
 ## Why TalkToCode?
 Developers often spend 60% of their time understanding code. TalkToCode streamlines this process, saving time and increasing productivity by automating code documentation and providing easy navigation through complex codebases.
 
-## Challenges Addressed
-- **GitHub API Limitations**: Efficiently scraping large codebases.
-- **Large Codebase Documentation**: Managing token and parameter limits with the Gemini API.
-- **Multi-Technology Support**: Compatibility with Python, Flutter, and more.
-
 ## Project Links
-- [GitHub](https://github.com/ARYANK-08/codeai)
 - [Website](http://django-env.eba-kpfrhyez.ap-south-1.elasticbeanstalk.com/)
+- [Demo](https://www.loom.com/share/e0ddeda326e048eb8923df859a6a00ba?sid=b5ff1808-b8e1-45f7-ab61-008dd0853f1c)
+- [Devfolio](https://devfolio.co/projects/talktocode-0a26)
+- [GitHub](https://github.com/ARYANK-08/codeai)
 
 ## Developers
 - Aryan Kyatham
+- Sharvin Gavad
 
 ## Technologies Used
 - Django
