@@ -1,44 +1,30 @@
-# talktocode
-a senior ai developer guru which helps you understand large codebases
+# TalkToCode
 
+**Understanding large codebases just got easier.**  
+TalkToCode acts as a senior AI developer assistant, helping you navigate complex codebases, generate automated documentation, and receive real-time explanations.
 
-features: visualize codebase, solves personal doubts and build on existing codebase
+## Features
+- **Code Scraping**: Input a GitHub username and repository list to scrape and document code. Visualize code structures effortlessly.
+- **Doubt Resolution**: Get clear explanations for code elements like functions and database connections.
+- **Code Building**: Generate and optimize code based on prompts. Debug and enhance your existing codebase.
+- **UI Building**: Create UI projects, run the generated code, and interact with the results.
 
+## Why TalkToCode?
+Developers often spend 60% of their time understanding code. TalkToCode streamlines this process, saving time and increasing productivity by automating code documentation and providing easy navigation through complex codebases.
 
-watch this and i bet you will enjoy the project : https://www.loom.com/share/e0ddeda326e048eb8923df859a6a00ba
+## Challenges Addressed
+- **GitHub API Limitations**: Efficiently scraping large codebases.
+- **Large Codebase Documentation**: Managing token and parameter limits with the Gemini API.
+- **Multi-Technology Support**: Compatibility with Python, Flutter, and more.
 
-https://devfolio.co/projects/talktocode-0a26
+## Project Links
+- [GitHub](https://github.com/ARYANK-08/codeai)
+- [Website](http://django-env.eba-kpfrhyez.ap-south-1.elasticbeanstalk.com/)
 
-## Documentation for Talk To Code
+## Developers
+- Aryan Kyatham
 
-Talk To Code is an AI senior developer assistant designed to help you understand, document, and build on code bases. It provides line-by-line documentation of code, visualizes code structures, and answers doubts like function workings or database connections.
-
-### Code Scraping
-
-- Enter a username and repository list to scrape code.
-- The AI provides detailed documentation of each line and visualizes the code structure.
-
-### Doubt Resolution
-
-- Get breakdowns of code elements like function calls or database connections.
-- Understand database parameters, connection initialization, and closing.
-
-### Code Building
-
-- Use the code play feature to generate code based on prompts.
-- Obtain code explanations, debugging, and optimization assistance.
-
-### UI Building
-
-- Generate code for projects like a flappy bird game or a landing page.
-- Run the generated code and interact with the UI.
-
-### Importance
-
-- Proper documentation aids in understanding and building on legacy code bases.
-- Talk To Code streamlines the process by providing comprehensive assistance.
-
-### Conclusion
-
-- Talk To Code is a valuable tool for developers, offering code understanding, documentation, visualization, and building capabilities.
-- Enhance your coding experience with Talk To Code.
+## Technologies Used
+- Django
+- GitHub API
+- Google Gemini API
