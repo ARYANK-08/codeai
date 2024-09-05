@@ -4,8 +4,14 @@
 TalkToCode acts as your AI-powered senior developer assistant, helping you navigate complex codebases, generate automated documentation, and receive real-time explanations. 🎯
 
 ![image](https://github.com/user-attachments/assets/abf47ac1-088f-46e7-961f-155d8bc1b0aa)
-## 🔎 Glimpse: 
-https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774
+
+<div align="center">
+
+## 🔎 Glimpse:
+
+[![Watch the video](https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774)](https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774)
+
+</div>
 
 ## ✨ Features:
 - 🔍 **Code Scraping**: Input a GitHub username and repository list to scrape and document code. Visualize code structures effortlessly.
