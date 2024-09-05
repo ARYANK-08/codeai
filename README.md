@@ -12,7 +12,7 @@ TalkToCode acts as your AI-powered senior developer assistant, helping you navig
     </td>
     <td width="40%">
       <a href="https://github.com/user-attachments/assets/4d4c1a4d-ce6f-47a6-9999-b104bcbbb497">
-        <img src="https://github.com/user-attachments/assets/4d4c1a4d-ce6f-47a6-9999-b104bcbbb497" alt="Watch the video" style="width:100%;"/>
+        <img src="https://github.com/user-attachments/assets/abf47ac1-088f-46e7-961f-155d8bc1b0aa" alt="Watch the video" style="width:100%;"/>
       </a>
     </td>
   </tr>
