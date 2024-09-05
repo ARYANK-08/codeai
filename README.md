@@ -3,15 +3,23 @@
 **Understanding large codebases just got easier.**  
 TalkToCode acts as your AI-powered senior developer assistant, helping you navigate complex codebases, generate automated documentation, and receive real-time explanations. 🎯
 
-![image](https://github.com/user-attachments/assets/abf47ac1-088f-46e7-961f-155d8bc1b0aa)
-
 <div align="center">
 
-## 🔎 Glimpse:
-
-[![Watch the video](https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774)](https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774)
+<table>
+  <tr>
+    <td width="60%">
+      <img src="https://github.com/user-attachments/assets/abf47ac1-088f-46e7-961f-155d8bc1b0aa" alt="Image" style="width:100%;"/>
+    </td>
+    <td width="40%">
+      <a href="https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774">
+        <img src="https://github.com/user-attachments/assets/b8863847-d89c-4bf6-912a-2b9c5b065774" alt="Watch the video" style="width:100%;"/>
+      </a>
+    </td>
+  </tr>
+</table>
 
 </div>
+
 
 ## ✨ Features:
 - 🔍 **Code Scraping**: Input a GitHub username and repository list to scrape and document code. Visualize code structures effortlessly.
