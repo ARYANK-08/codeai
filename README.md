@@ -9,8 +9,7 @@ TalkToCode acts as your AI-powered senior developer assistant, helping you navig
 
 [![Watch the video](https://github.com/user-attachments/assets/370d0599-26ef-4f33-91d0-c74a07174d57)](https://github.com/user-attachments/assets/370d0599-26ef-4f33-91d0-c74a07174d57)
 
-
-    
+</div>
 
 
 ## ✨ Features:
