@@ -18,6 +18,8 @@ TalkToCode acts as your AI-powered senior developer assistant, helping you navig
   </tr>
 </table>
 
+</div>
+
 
 
 
