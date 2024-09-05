@@ -3,22 +3,14 @@
 **Understanding large codebases just got easier.**  
 TalkToCode acts as your AI-powered senior developer assistant, helping you navigate complex codebases, generate automated documentation, and receive real-time explanations. 🎯
 
-<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+<div align="center">
 
-  <!-- Image Div -->
-  <div style="flex: 60%;">
-    <img src="https://github.com/user-attachments/assets/abf47ac1-088f-46e7-961f-155d8bc1b0aa" alt="Image" style="width: 100%;"/>
-  </div>
+## 🔎 Glimpse:
 
-  <!-- Video Div -->
-  <div style="flex: 40%;">
-    <video width="100%" controls>
-      <source src="https://github.com/user-attachments/assets/370d0599-26ef-4f33-91d0-c74a07174d57" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
+[![Watch the video](https://github.com/user-attachments/assets/370d0599-26ef-4f33-91d0-c74a07174d57)](https://github.com/user-attachments/assets/370d0599-26ef-4f33-91d0-c74a07174d57)
 
-</div>
+
+    
 
 
 ## ✨ Features:
