@@ -1,11 +1,22 @@
 import requests
 from django.shortcuts import render
-
+import re
 import google.generativeai as genai
 from django.shortcuts import render, redirect
 from .forms import HtmlCodeForm, CodeRequestForm
 import google.generativeai as genai
-
+from django.shortcuts import render
+from .forms import CodeRequestForm
+import sys
+from io import StringIO
+from django.shortcuts import render
+from django.views import View
+from .forms import CodeForm
+from django.utils.safestring import mark_safe
+import re
+from django.shortcuts import render
+from .forms import PythonCodeForm
+import re
 # Configure the API
 genai.configure(api_key="AIzaSyCWxLcSHWh_ccrE15Gyo0t_8WhPfAXXelM")
 
@@ -32,11 +43,6 @@ def fetch_gemini_code(description):
     return convo.last.text
 
 
-from django.shortcuts import render
-from .forms import CodeRequestForm
-
-from django.shortcuts import render
-from .forms import CodeRequestForm
 def code_runner(request):
     generated_code = None
     if request.method == 'POST':
@@ -62,9 +68,7 @@ def code_runner(request):
         'form': form,
         'generated_code': generated_code
     })
-import re
 
-import re
 
 def clean_html_code(html_code):
     # Replace ```css with <style> tag
@@ -80,11 +84,6 @@ def clean_html_code(html_code):
     return html_code
 
 
-from django.utils.safestring import mark_safe
-import re
-from django.shortcuts import render
-from .forms import PythonCodeForm
-import re
 
 def python_generate_code(request):
     generated_code = ''
@@ -241,11 +240,7 @@ def gemini_optimize(code):
 # print(convo.last.text)
 
 
-import sys
-from io import StringIO
-from django.shortcuts import render
-from django.views import View
-from .forms import CodeForm
+
 
 class RunCodeView(View):
     form_class = CodeForm
