@@ -6,7 +6,43 @@ from fpdf import FPDF
 import requests
 from concurrent.futures import ThreadPoolExecutor
 from collections import defaultdict
+import base64
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.conf import settings
+from PyPDF2 import PdfReader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+import os
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+import google.generativeai as genai
+from langchain_community.vectorstores import FAISS
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts import PromptTemplate
+from dotenv import load_dotenv
+import requests
+from bs4 import BeautifulSoup
+import urllib.parse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from .models import Subscriber
+from django.views.decorators.http import require_POST
+from django.shortcuts import redirect
+from django.contrib import messages
+from .models import Subscriber
+from django.views.decorators.http import require_POST
+from django.core.mail import send_mail
+from django.conf import settings
+from django.views.decorators.http import require_POST
+from django.shortcuts import redirect
+from django.contrib import messages
+from .models import Subscriber  # Adjust the import according to your app structure
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.utils.html import strip_tags
 
+load_dotenv()
+genai.configure(api_key=(os.getenv("GOOGLE_API_KEY")))
 def fetch_repositories(username,access_token):
     """
     Fetches repositories for the given GitHub username.
@@ -144,7 +180,8 @@ def parse_directory_summary(directory_summary):
 #     html_content += "</ul>"
 #     return html_content
 
-
+def index(request):
+    return render(request, 'index.html')
 
 def fetch_code(raw_url):
     """
@@ -386,27 +423,7 @@ def profile_analysis(request):
 
 #         }
 #         return render(request, 'profile_analyzer.html',content)
-from .models import Subscriber
 
-from django.views.decorators.http import require_POST
-def index(request):
-    return render(request, 'index.html')
-
-
-from django.shortcuts import redirect
-from django.contrib import messages
-from .models import Subscriber
-from django.views.decorators.http import require_POST
-from django.core.mail import send_mail
-from django.conf import settings
-from django.views.decorators.http import require_POST
-from django.shortcuts import redirect
-from django.contrib import messages
-from .models import Subscriber  # Adjust the import according to your app structure
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.conf import settings
-from django.utils.html import strip_tags
 @require_POST
 def subscribe(request):
     email = request.POST.get('email')
@@ -449,26 +466,6 @@ def user_signin(request):
     return render(request, 'register-page.html')
 
 
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.conf import settings
-from PyPDF2 import PdfReader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-import os
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-import google.generativeai as genai
-from langchain_community.vectorstores import FAISS
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.chains.question_answering import load_qa_chain
-from langchain.prompts import PromptTemplate
-from dotenv import load_dotenv
-import requests
-from bs4 import BeautifulSoup
-import urllib.parse
-from concurrent.futures import ThreadPoolExecutor, as_completed
-
-load_dotenv()
-genai.configure(api_key=(os.getenv("GOOGLE_API_KEY")))
 
 
 
@@ -610,7 +607,7 @@ def gemini(filename, code):
     #     return render('gemini.html', {'response_text': response_text})
     # else:
     #     return render('gemini.html')
-import base64
+
 
 
 def generate_pdf1(request):
